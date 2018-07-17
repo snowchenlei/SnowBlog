@@ -1,0 +1,16 @@
+﻿#search > div label {
+    padding: 0px;
+}
+
+#search > div input {
+    display: inline-block;
+    width: auto;
+}
+#search {
+    border: 1px solid #ddd;
+    margin-bottom: 5px;
+    padding: 5px;
+}
+#search > div{
+    display: inline-block;
+}

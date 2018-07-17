@@ -1,0 +1,235 @@
+﻿
+@{
+    ViewBag.Title = "博客管理";
+}
+@section Style{
+    <style type="text/css">
+        #pageDetail ul{
+            vertical-align: middle;
+        }
+        #pageDetail>span {
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+    </style>
+}
+<button class="btn btn-default navbar-btn" data-toggle="modal" data-target="#AddCategory" onclick="Add()">
+    <i class="glyphicon glyphicon-plus"></i>添加
+</button>
+<div id="search">
+    <div>
+        <label for="SearchTitle" class="control-label text-center">标题</label>
+        <input type="text" class="text form-control" id="SearchTitle" name="SearchTitle" placeholder="标题" />
+    </div>
+    <div>
+        <label for="SearchCategoryId" class="control-label text-center">分类</label>
+        <select id="SearchCategoryId" name="SearchCategoryId" class="selectpicker show-tick"></select>
+    </div>
+    <div>
+        <label for="SearchSourceType" class="control-label text-center">来源类型</label>
+         <select id="SearchSourceType" name="SearchSourceType" class="selectpicker show-tick"></select>
+    </div>
+    <div>
+        <label for="SearchStartTime" class="control-label text-center">发布时间</label>
+        <input size="16" id="SearchStartTime" name="SearchStartTime" type="text" readonly class="form_datetime form-control" />
+        <label for="SearchEndTime" class="control-label text-center">~</label>
+        <input size="16" id="SearchEndTime" name="SearchEndTime" type="text" readonly class="form_datetime form-control" />
+    </div>
+    <button class="btn btn-default navbar-btn" onclick="Search('/Manager/Blogger/List')">
+        <i class="glyphicon glyphicon-zoom-in"></i>查询
+    </button>
+    <button class="btn btn-default navbar-btn" onclick="Reset()">
+        <i class="glyphicon glyphicon-repeat"></i>重置
+    </button>
+</div>
+<table id="list" class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>标题</th>
+            <th>分类名称</th>
+            <th>描述</th>
+            <th>访问量</th>
+            <th>排序</th>
+            <th>来源类型</th>
+            <th>是否展示</th>
+            <th>发布时间</th>
+            <th>更新时间</th>
+            <th>编辑</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+<div id="pageDetail" style="text-align: center;"></div>
+@section Modal{
+    <div class="modal fade" id="AddCategory" tabindex="-1" role="dialog">
+        <div class="modal-dialog" style="width: 800px;" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">添加新分类</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label><input type="checkbox" id="IsShow" name="IsShow" checked="checked" value="true" onchange="checkbox_change(this)">列表展示</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Title">标题(*)</label>
+                        <input type="text" class="form-control" id="Title" name="Title" placeholder="博文标题">
+                    </div>
+                    <div class="form-group">
+                        <label for="Category">分类</label>
+                        <select id="Category" class="selectpicker show-tick form-control"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="SourceType">来源类型</label>
+                        <select id="SourceType" class="selectpicker show-tick form-control"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="Sort">排序</label>
+                        <input type="text" class="form-control" id="Sort" name="Sort" placeholder="排序">
+                    </div>
+                    <div class="form-group">
+                        <label for="Category">描述</label>
+                        <textarea id="Description" class="form-control" style="resize: none;height: 100px;" name="Description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="Category">内容</label>
+                        <textarea id="content" name="content" class="ckeditor"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="submit" class="btn btn-primary" onclick="SaveData()">保存</button>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" id="Id" />
+    </div>
+}
+
+@section Script{
+    <script src="~/lib/ckeditor_4.7.3_full/ckeditor.js"></script>
+    <script src="~/Scripts/fix.js"></script>
+    <script type="text/javascript">
+        CKEDITOR.replace('content', {
+            toolbar: 'Basic'
+        });
+        
+        var editor = CKEDITOR.instances.content;
+        var data = @Html.Raw(ViewData["data"]);
+        Load(data);
+        //分页加载
+        function Load(data, type) {
+            if (data.list.length == 0) {
+                $("#pageDetail").css("display", "none");
+                $('tbody tr').remove();
+                return;
+            } else {
+                $("#pageDetail").css("display", "block");
+            }
+            if (type != 1) {//说明是搜索
+                ReplaceParent(data.categories, "Category");
+                ReplaceParent(data.categories, "SearchCategoryId");
+                ReplaceParent(data.sourceTypes, "SourceType");
+                ReplaceParent(data.sourceTypes, "SearchSourceType");
+            }
+            var pageCount = data.pageCount; //取到pageCount的值(把返回数据转成object类型)
+            var pageIndex = data.pageIndex; //得到urrentPage
+            ReplaceData(data.list);
+            InitPageOption(pageIndex, pageCount);
+            //if (pageCount > 1) {
+            //    $('<span>共' + totalCount + '篇文章，第' + pageIndex + '页/共' + pageCount + '页</span>').prependTo('#pageDetail');
+            //    $('<input type="text" id="txtPage"/><input type="button" value="跳转" onclick="ToPage()">').appendTo('#pageDetail');
+            //}
+        }
+        //列表生成
+        function ReplaceData(data) {
+            var htmlStr = "";
+            for (var i = 0, max = data.length; i < max; i++) {
+                htmlStr += '<tr>';
+                for (var val in data[i]) {
+                    if (val == "Id") {
+                        continue;
+                    }
+                    htmlStr += '<td>' + data[i][val] + '</td>';
+                }
+                if (data[i].Id != undefined) {
+                    htmlStr += '<td>';
+                    htmlStr += '<button class="btn btn-link navbar-btn paddingNone" data-toggle="modal" data-target="#AddCategory" onclick="Edit_click(' + data[i].Id + ')">';
+                    htmlStr += '<i class="glyphicon glyphicon-wrench"></i>编辑';
+                    htmlStr += '</button>';
+                    htmlStr += '<button class="btn btn-link navbar-btn paddingNone" onclick="Delete_click(' + data[i].Id + ')">';
+                    htmlStr += '<i class="glyphicon glyphicon-minus"></i>删除';
+                    htmlStr += '</button>';
+                    htmlStr += '</td>';
+                }
+                htmlStr += '</tr>';
+            }
+            $('#list tbody tr').remove();
+            $('#list tbody').append(htmlStr);
+        }
+        //页码跳转
+        function ToPage() {
+            pageClicked($("#txtPage").val());
+        }
+        //分页点击回调
+        function pageClicked(page) {
+            var CategoryId = SelectVal("SearchCategoryId");
+            $.post("/Manager/Blogger/List", { "pageIndex": page, "categoryId": CategoryId }, function (data) {
+                ReplaceData(data.list);
+                ReplaceParent(data.categories, "Category");
+            });
+        }
+        //添加
+        function Add() {
+            Add_click();
+            editor.setData('');
+        }
+        //弹框数据设置
+        function SetValue(data) {
+            $("#Title").val(data.Title);
+            $("#Description").val(data.Description);
+            $("#Sort").val(data.Sort);
+            $('#Category').selectpicker('val', data.Category);
+            $('#SourceType').selectpicker('val', data.SourceType);
+            editor.setData(data.HtmlEncoded);
+            SetCheckbox('IsShow', data.IsShow);
+        }
+
+        //保存数据
+        function SaveData() {
+            var Body = encodeURIComponent(editor.document.getBody().getText());
+            var htmlContent = editor.getData();
+            HtmlEncoded = encodeURIComponent(htmlContent);
+            var IsShow = CheckboxVal("IsShow");
+            var Title = TxtVal("Title");
+            var CategoryId = SelectVal("Category");
+            var SourceType = SelectVal("SourceType");
+            var Description = TxtVal("Description");
+            var Sort = TxtVal('Sort');
+            var id = $("#Id").val();
+            if (Title == '') { toastr.error('请输入标题后再试'); return false; }
+            if (CategoryId == "-1") { toastr.error('请选择分类后再试'); return false; }
+            if (SourceType == "-1") { toastr.error('请选择来源类型后再试'); return false; }
+            if (Body == '' || Body == '%0A' || Body == '%0D') { toastr.error('请输入主题内容后再试'); return false; }
+            var data = {
+                'id': id,
+                'IsShow': IsShow,
+                'Title': Title,
+                'CategoryId': CategoryId,
+                'SourceType': SourceType,
+                'Description': Description,
+                'Body': Body,
+                'HtmlEncoded': HtmlEncoded,
+                'Sort': Sort
+            };
+            $.post("/Manager/Blogger/Edit", data, function (data) {
+                SaveSuccess(data);
+                editor.setData('');
+            });
+        }
+
+    </script>
+}

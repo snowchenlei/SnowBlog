@@ -1,0 +1,128 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script charset="utf-8" src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <link href="~/style/login.css" rel="stylesheet" />
+    <title>博客后台登陆系统</title>
+    <script charset="utf-8" src="~/Scripts/login/ani.js"></script>
+</head>
+
+<body>
+    <div class="frontHome page" id="loginbox">
+        <div class="wrap-container">
+            <div id="home_container" class="clearfix">
+                <div id="home_main">
+                    <div class="inner-main">
+                        <div class="login_box">
+                            <div class="form-title">
+                                <h3>登录</h3>
+                                <h4>LOGIN</h4>
+                            </div>
+                            <form class="well form-horizontal" method="POST" action="~/Manager/Login/Login" style="background:#FFF">
+                                <div class="logininput">
+                                    <input type='hidden' name='csrfmiddlewaretoken' value='OS4Khae27T7w2Li6iTyucYDOojEoKCbm' />
+                                    <fieldset>
+                                        <div id="div_id_username" class="clearfix control-group">
+                                            <label for="id_username" class="control-label requiredField">
+                                                帐号<span class="asteriskField">*</span>
+                                            </label>
+                                            <div class="controls">
+                                                <input class="textinput textInput" id="id_username" maxlength="30" required="required" name="username" placeholder="用户名/手机号/邮箱" type="text" />
+                                            </div>
+                                        </div>
+                                        <div id="div_id_password" class="clearfix control-group">
+                                            <label for="id_password" class="control-label requiredField">
+                                                密码<span class="asteriskField">*</span>
+                                            </label>
+                                            <div class="controls">
+                                                <input class="textinput textInput" id="id_password" required="required" name="password" placeholder="密码" type="password" />
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <fieldset class="form-actions" style="position:relative; margin-top:15px;">
+                                    <div class="loginFormBtn clearfix">
+                                        <button class="login_btn js_login_btn" type="submit" style="width:100%;">登录</button>
+                                        <div class="zzy">专业的互联网工具提供商</div>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="wrap-footer">
+            <div id="footer">
+                <div class="inner-footer">
+                    <div class="foot">
+                        个人博客管理系统
+                        <div class="foot_kh">一路担当</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="noie-content" class="clearfix" style=" display:none">
+        <div class="hd"><img src="https://s2.d2scdn.com/static/imgs/oniets.jpg" /></div>
+        <div class="about-us-box">
+            <h2>致ie6/7用户</h2>
+            <p class="hightxt">
+                尊敬的用户，为了给您提供更方便、更高效、更易操作的后台体验，我们诚恳地建议您升级您的IE6/7浏览器。
+            </p>
+            <p>
+                IE6浏览器是美国微软公司在2001年发布的一款软件，10多年前，IE6凭借着优质的产品质量和与Windows XP操作系统的捆绑方式，使IE6浏览器成为了当时世界上最流行的浏览器软件。
+            </p>
+            <p>
+                然而，互联网是一个飞速发展的行业，10年后的今天，IE6浏览器已经完全无法适应当今互联网越来越复杂的应用了。怪异的渲染引擎、功能的缺失、漏洞百出的安全性已经让IE6完全失去了与其他现代浏览器竞争的条件，就连微软公司自己，也推出了<a target="_blank" href="http://www.ie6countdown.com/">ie6countdown.com</a>网站，用来统计全球IE6浏览器的使用情况，请求用户尽快停止使用IE6浏览器。
+            </p>
+
+            <h3>我们推荐你升级到如下浏览器：</h3>
+            <div class="new-broswer">
+                <ul>
+                    <li class="chrome"><a target="_blank" href="http://www.google.cn/chrome/intl/zh-CN/landing_chrome.html?hl=zh-CN">谷歌浏览器</a></li>
+                    <li class="firefox"><a target="_blank" href="http://firefox.com.cn/">火狐浏览器</a></li>
+                    <li class="edge"><a target="_blank" href="http://www.microsoft.com/zh-cn/windows/microsoft-edge">edge浏览器</a></li>
+                    <li class="ienew"><a target="_blank" href="http://windows.microsoft.com/zh-cn/internet-explorer/downloads/ie">ie8以上版本</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="bd"><a class="no-upie" href="javascript:void()">暂不升级>></a>（不推荐）</div>
+    </div>
+
+    <script type="text/javascript">
+        $(function(){
+        var mttop=($(window).height()-$('.frontHome.page').height()-20)/2
+    if(mttop<0){mttop=0}
+    // $('.frontHome.page').css('marginTop', mttop);
+        //登录框效果
+    $('#id_username').focus(function(){
+        $(this).parent('.controls').addClass('focus')
+    }).blur(function(){$(this).parent('.controls').removeClass('focus')})
+    $('#id_password').focus(function(){
+        $(this).parent('.controls').addClass('focus')
+    }).blur(function(){$(this).parent('.controls').removeClass('focus')})
+        });
+      if(!window.localStorage)
+                {//alert("低版本浏览器");
+                $("#noie-content").show();
+                $("#loginbox").hide();}
+                else
+                {//alert("高级货浏览器");
+                $("#noie-content").hide();}
+        $(function(){
+                $(".no-upie").click(function(){
+                        $("#noie-content").hide();
+                        $("#loginbox").show();
+                        })
+                })
+    </script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+﻿@model IEnumerable<Cl.Blog.Model.Blogger>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@section Style{
+    <link href="~/style/Calendar.css" rel="stylesheet" />
+    <style type="text/css">
+        .sidebar {
+            width: 95%;
+            border-radius: 5px;
+            background-color: #F5F5F5;
+        }
+        .sidebar-title {
+            height: 40px;
+            line-height: 40px;
+            font-size: 18px;
+            color: #fff;
+            text-align: center;
+            background-color: #0094ff;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+        .sidebar-item {
+            height: 30px;
+            line-height: 30px;
+            padding-left: 20px;
+            border-top: 1px solid #ddd;
+        }
+        .calendar tr th{
+            text-align: center;
+        }
+    </style>
+}
+
+<div id="main">
+    <div id="mainContent">
+        <div class="col-md-2 col-lg-2">
+            <div style="position: fixed;top: 70px;">
+                <div class="sidebar">
+                    <div class="sidebar-title">随笔分类</div>
+                    @foreach (KeyValuePair<int, string> kPair in ViewData["category"] as Dictionary<int, string>)
+                    {
+                        <div class="sidebar-item" data-val="@kPair.Key" title="@kPair.Value"><a href="~/Home/Index?categoryId=@kPair.Key">@kPair.Value</a></div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="list-group col-md-8 col-lg-8">
+            <!--正文列表内容-->
+            <div id="body"></div>
+            <!--分页-->
+            <div id="pageDetail" style="text-align: center;"></div>
+        </div>        
+        <div  class="col-md-2 col-lg-2">
+            <!--其它内容-->
+            <canvas id="canvas" style="width: 100%;"></canvas>
+            <div class='calendar' style="width: 100%;" id='calendar'></div>            
+            <div style="height: 1000px;"></div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="categoryId" />
+
+@section Script{
+    <script src="~/Scripts/clock.js"></script>
+    <script src="~/Scripts/Calendar.js"></script>
+    <script type="text/javascript">
+
+        var data = @Html.Raw(ViewData["data"]);
+        Load(data);
+        function Load(data) {
+            //#region 没有数据则隐藏分页
+            if (data.list.length == 0) {
+                $("#pageDetail").css("display", "none");
+                $('tbody tr').remove();
+                return;
+            } else {
+                $("#pageDetail").css("display", "block");
+            }
+            //#endregion
+            $("#categoryId").val(data.categoryId);
+            var pageCount = data.pageCount; //取到pageCount的值(把返回数据转成object类型)
+            var pageIndex = data.pageIndex; //得到urrentPage
+            ReplaceData(data.list);
+            InitPageOption(pageIndex, pageCount);
+        }
+        //分页点击回调
+        function pageClicked(page) {
+            var categoryId = $("#categoryId").val();
+            $.post("/Home/List", { "pageIndex": page, "categoryId": categoryId }, function (data) {
+                ReplaceData(data.list);
+            });
+        }
+        //列表生成
+        function ReplaceData(data) {
+            var htmlStr = "";
+            for (var i = 0, max = data.length; i < max; i++) {
+                htmlStr += '<div class="list-group-item">';
+                htmlStr += '<div class="list-group-item-heading">';
+                htmlStr += '<h2>';
+                htmlStr += '<a href="/Blogger/Index/(' + data[i].Id + ')" target="_blank">(' + data[i].Title + ')</a>';
+                htmlStr += '</h2>';
+                htmlStr += '</div>';
+                htmlStr += '<div class="list-group-item-text" style="clear: both;">';
+                htmlStr += '<p>(' + data[i].Description + ')</p>';
+                htmlStr += '</div>';
+                htmlStr += '<div>';
+                htmlStr += data[i].CategoryName;
+                htmlStr += '<span style="float: right;">';
+                htmlStr += '<i class="glyphicon glyphicon-calendar"></i>' + data[i].CreateDate;
+                htmlStr += '</span>';
+                htmlStr += '</div>';
+                htmlStr += '</div>';
+            }
+            $('#body').html('');
+            $('#body').append(htmlStr);
+        }
+    </script>
+}

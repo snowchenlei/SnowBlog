@@ -1,0 +1,130 @@
+﻿@model Cl.Blog.Model.BloggerInfo
+
+@{
+    ViewBag.Title = @Model.Title;
+}
+
+@section Style{
+    <link href="~/lib/ckeditor_4.7.3_full/plugins/codesnippet/lib/highlight/styles/vs.css" rel="stylesheet" />
+    <style type="text/css">
+        .clblogs_code {
+            padding: 5px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+        }
+        .clblogs_code_help {
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .clblogs_code_text {
+            margin: 0;
+            width: 100%;
+            min-height: 200px;
+            max-height: 500px;
+            resize: none;
+        } 
+        pre {
+            display: block;
+            padding: 0px;
+            margin: 0px;
+            font-size: 13px;
+            line-height: 1.42857143;
+            word-break: break-all;
+            word-wrap: break-word;
+            color: #333;
+            border: 0px;
+            border-radius: 4px;
+        }
+        .hljs {
+            border: 0px;
+            font-family: "Consulas", "Courier New", Courier, mono, serif;
+            background-color: #f5f5f5;
+            font-size: 12px;
+            display: block;
+            padding: 1px;
+            margin: 0;
+            width: 100%;
+            font-weight: 200;
+            white-space: pre-wrap
+        }
+
+            .hljs ul {
+                list-style: decimal;
+                background-color: #fff;
+                margin: 0px 0px 0 40px !important;
+                padding: 0px;
+            }
+
+                .hljs ul li {
+                    list-style: decimal-leading-zero;
+                    border-left: 1px solid #ddd !important;
+                    background: #fff;
+                    padding: 5px !important;
+                    margin: 0 !important;
+                    line-height: 14px;
+                    word-break: break-all;
+                    word-wrap: break-word;
+                }
+
+                    .hljs ul li:nth-of-type(even) {
+                        background-color: #fcfcfc;
+                        color: inherit;
+                    }
+    </style>
+}
+
+<h1>@Model.Title</h1>
+<span>@Model.CreateDate</span>
+<div>
+    @Html.Raw(@Model.HtmlEncoded)
+</div>
+<span>@Model.CategoryName</span>
+@section Script{
+    <script src="~/lib/ckeditor_4.7.3_full/plugins/codesnippet/lib/highlight/highlight.pack.js"></script>
+    <script>
+        //初始化代码高亮插件
+        hljs.initHighlightingOnLoad('');
+        //代码高亮自定义——增加行号
+        $("code").each(function () {
+            $(this).html("<ul><li>" + $(this).html().replace(/\n/g, "\n</li><li>") + "\n</li></ul>");
+        });
+
+        $('pre').each(function () {
+            $(this).prop('outerHTML',
+                '<div class="clblogs_code">' +
+                    '<img class="clblogs_code_help" src="/style/img/ExpandedBlockStart.gif" data-val="1" onclick="clblogs_code_hide(this)">' +
+                    '<div class="clblogs_code_open">' +
+                        '<div class="clblogs_code_toolbar">' +
+                            '<img class="clblogs_code_help clblogs_code_copy" src="/style/img/copycode.gif" title="复制代码">' +
+                        '</div>' +
+                        $(this).prop('outerHTML') +
+                        '<div class="clblogs_code_toolbar">' +
+                            '<img class="clblogs_code_help clblogs_code_copy" src="/style/img/copycode.gif" title="复制代码">' +
+                        '</div>' +
+                    '</div>' +
+                '</div>');
+        });
+        $('.clblogs_code_toolbar').click(function () {
+            var parentCode = $(this).parents('.clblogs_code');
+            parentCode.html(
+                '<div>按 Ctrl+C 复制代码</div>' +
+                '<textarea class="clblogs_code_text">' +
+                $(this).siblings('pre').text() +
+                '</textarea>' +
+                '<div>按 Ctrl+C 复制代码</div>');
+            parentCode.children('textarea').select();
+        });
+        function clblogs_code_hide(e) {
+            if ($(e).data('val') == 1) {
+                $(e).siblings('.clblogs_code_open').css('display', 'none');
+                $(e).prop('src', '/style/img/ContractedBlock.gif');
+                $(e).data('val', 0);
+            } else {
+                $(e).siblings('.clblogs_code_open').css('display', 'block');
+                $(e).prop('src', '/style/img/ExpandedBlockStart.gif');
+                $(e).data('val', 1);
+            }
+        }
+        
+    </script>
+}

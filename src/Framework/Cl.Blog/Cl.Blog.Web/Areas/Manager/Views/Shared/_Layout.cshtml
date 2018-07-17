@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <title>@ViewBag.Title—博客后台管理系统</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- Bootstrap3.3.5 CSS -->
+    <link href="~/lib/bootstrap-3.3.7/css/bootstrap-theme.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap-select-1.12.4/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <link href="~/Content/toastr.min.css" rel="stylesheet" />
+    <link href="~/lib/ztree-v3/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+
+    <link href="~/style/Search.css" rel="stylesheet" />
+    <!--[if lt IE 9]>
+    <script src="http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    @RenderSection("Style")
+    <style type="text/css">
+        body{
+            padding: 0px;
+            margin: 0px;
+        }
+        #main-nav .nav-header {
+            margin-right: 0px;
+        }
+
+        #main-nav .nav-list li a {
+            padding-left: 30px;
+        }
+
+        #main-nav .glyphicon {
+            margin-right: 4px;
+        }
+        /*控制菜单箭头*/
+        .nav-header.collapsed > span.glyphicon-chevron-toggle:before {
+            content: "\e114";
+        }
+
+        .nav-header > span.glyphicon-chevron-toggle:before {
+            content: "\e113";
+        }
+        /*二级菜单选中*/
+        .secondmenu a {
+            font-size: 12px;
+            color: #4A515B;
+        }
+
+        .secondmenu li.active {
+            background-color: #eee;
+            border-color: #428bca;
+        }
+
+        .paddingNone{
+            padding: 0px;
+        }
+    </style>
+</head>
+
+<body>
+    @RenderSection("Modal")
+    <div class="container-fluid" style="padding: 0px;">
+        <header class="navbar navbar-static-top navbar-inverse" id="top" style="margin-bottom: 2px;"></header>
+        <div class="row">
+            <div class="col-md-2 col-lg-2">
+                <ul id="main-nav" class="nav nav-tabs nav-stacked" style="border: 1px solid #ddd;">
+                    <li>
+                        <a href="#sss" class="nav-header collapsed" data-toggle="collapse">
+                            <i class="glyphicon glyphicon-cog"></i>系统管理
+                            <span class="pull-right glyphicon glyphicon-chevron-toggle"></span>
+                        </a>
+                        <ul id="sss" class="nav nav-list collapse secondmenu" style="height: 0px;">
+                            <li><a href="#"><i class="glyphicon glyphicon-user"></i>用户管理</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-th-list"></i>主题管理</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-asterisk"></i>模块管理</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-edit"></i>修改密码</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#systemSetting" class="nav-header collapsed" data-toggle="collapse">
+                            <i class="glyphicon glyphicon-book"></i>博客管理
+                            <span class="pull-right glyphicon glyphicon-chevron-toggle"></span>
+                        </a>
+                        <ul id="systemSetting" class="nav nav-list collapse secondmenu" style="height: 0px;">
+                            <li><a href="/Manager/Blogger/Index"><i class="glyphicon glyphicon-file"></i>文章管理</a></li>
+                            <li><a href="/Manager/Category/Index"><i class="glyphicon glyphicon-folder-close"></i>分类管理</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-tags"></i>Tags管理</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-hdd"></i>附件管理</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-10 col-lg-10">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    <script src="~/Scripts/jquery-3.2.1.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script src="~/lib/bootstrap-select-1.12.4/js/bootstrap-select.min.js"></script>
+    <script src="~/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+    @*<script src="~/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>*@
+    <script src="~/lib/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="~/Scripts/bootstrap-paginator.min.js"></script>
+    <script src="~/Scripts/toastr.min.js"></script>
+    <script src="~/lib/ztree-v3/js/jquery.ztree.all.min.js"></script>
+    <!--临时帮助js-->
+    <script src="~/Scripts/Search.js"></script>
+    <script src="~/Scripts/Common.js"></script>
+    <script type="text/javascript">
+        //弹框参数设置，若用默认值可以省略以下面代
+        toastr.options = {
+            "closeButton": true, //是否显示关闭按钮
+            "debug": false, //是否使用debug模式
+            "positionClass": "toast-top-center",//弹出窗的位置
+            "showDuration": "300",//显示的动画时间
+            "hideDuration": "1000",//消失的动画时间
+            "timeOut": "5000", //展现时间
+            "extendedTimeOut": "1000",//加长展示时间
+            "showEasing": "swing",//显示时的动画缓冲方式
+            "hideEasing": "linear",//消失时的动画缓冲方式
+            "showMethod": "fadeIn",//显示时的动画方式
+            "hideMethod": "fadeOut" //消失时的动画方式
+        }
+        $(".form_datetime").datetimepicker({
+            format: "yyyy/mm/dd hh:ii",
+            autoclose: true,
+            todayBtn: true,
+            language: 'zh-CN',
+            startDate: '1900-01-01'
+        });
+    </script>
+    @RenderSection("Script")
+</body>
+</html>
