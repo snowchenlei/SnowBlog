@@ -18,3 +18,14 @@
 /src/Framework/Cl.Blog/niunan.sql
 /.vs
 /src/Framework/Cl.Blog/.vs
+/src/.vs/Cl.Blog
+/src/Cl.Blog.BLL/bin/Debug
+/src/Cl.Blog.BLL/obj/Debug
+/src/Cl.Blog.Common/bin/Debug
+/src/Cl.Blog.Common/obj/Debug
+/src/Cl.Blog.DAL/bin/Debug
+/src/Cl.Blog.DAL/obj/Debug
+/src/Cl.Blog.Model/bin/Debug
+/src/Cl.Blog.Model/obj/Debug
+/src/Cl.Blog.Web/bin
+/src/Cl.Blog.Web/obj/Debug
