@@ -1,0 +1,27 @@
+﻿.sidebar {
+    width: 95%;
+    border-radius: 5px;
+    background-color: #F5F5F5;
+}
+
+.sidebar-title {
+    height: 40px;
+    line-height: 40px;
+    font-size: 18px;
+    color: #fff;
+    text-align: center;
+    background-color: #0094ff;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.sidebar-item {
+    height: 30px;
+    line-height: 30px;
+    padding-left: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.calendar tr th {
+    text-align: center;
+}

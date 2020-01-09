@@ -1,0 +1,17 @@
+﻿@{
+    Layout = null;
+}
+@model List<string>
+<div class="list-group">
+    @foreach (var item in Model)
+    {
+        <div class="list-group-item">
+            <div class="d-flex w-100 justify-content-between">
+                <a href="/Blogger/Index/(2)" target="_blank"><h3 class="mb-1">@item</h3></a>
+                <small><i class="glyphicon glyphicon-calendar"></i>2017-11-15 16:01:29</small>
+            </div>
+            <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+            <small>Donec id elit non mi porta.</small>
+        </div>
+    }
+</div>
