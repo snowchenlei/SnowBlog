@@ -1,0 +1,27 @@
+﻿@page "/blogger/{id:int}"
+@using Snow.Blog.Service.Bloggers.Dto;
+@inject Snow.Blog.Service.Bloggers.IBloggerService BloggerService
+@if (blogger != null)
+{
+    <h1>@blogger.Title</h1>
+    <span>@blogger.EditDate</span>
+    <div>
+        @((MarkupString)blogger.HtmlEncoded)
+    </div>
+    <span>@blogger.CategoryName</span>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private BloggerDetailDto blogger;
+    protected override async Task OnInitializedAsync()
+    {
+        blogger = await GetDetail(Id);
+    }
+    private async Task<BloggerDetailDto> GetDetail(int id)
+    {
+        return await BloggerService.GetBloggerDetailAsync(id);
+    }
+}

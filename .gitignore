@@ -39,3 +39,12 @@
 /src/Snow.Blog/Snow.Blog.Model/obj
 /src/Snow.Blog/Snow.Blog.Web/bin/Debug/netcoreapp3.1
 /src/Snow.Blog/Snow.Blog.Web/obj
+/src/Snow.Blog/Snow.Blog.IRepository
+/src/Snow.Blog/Snow.Blog.Repository/bin/Debug/netcoreapp3.1
+/src/Snow.Blog/Snow.Blog.Repository/obj
+/src/Snow.Blog/Snow.Blog.Service/bin/Debug/netcoreapp3.1
+/src/Snow.Blog/Snow.Blog.Service/obj
+/src/Snow.Blog/Snow.Blog.SqlServer/bin/Debug/netcoreapp3.1
+/src/Snow.Blog/Snow.Blog.SqlServer/obj
+/src/Snow.Blog/Snow.Blog.Web.Blazor/bin/Debug/netcoreapp3.1
+/src/Snow.Blog/Snow.Blog.Web.Blazor/obj

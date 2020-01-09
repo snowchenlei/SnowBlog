@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dapper.Contrib.Extensions;
 using Snow.Blog.Model.Enum;
 
 namespace Snow.Blog.Model.DataBase
@@ -10,11 +11,13 @@ namespace Snow.Blog.Model.DataBase
     /// <summary>
     /// 博客表
     /// </summary>
+    [Table("Blogger")]
     public class Blogger
     {
         /// <summary>
         /// 自增主键
         /// </summary>
+        [Key]
         public int Id { get; set; }
 
         /// <summary>
@@ -81,5 +84,7 @@ namespace Snow.Blog.Model.DataBase
         /// 修改时间
         /// </summary>
         public DateTime? EditDate { get; set; }
+
+        public Category Category { get; set; }
     }
 }

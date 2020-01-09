@@ -6,6 +6,7 @@ using System.Runtime.Loader;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,8 +16,9 @@ using Snow.Blog.IRepository.Bloggers;
 using Snow.Blog.Service.Bloggers;
 using Snow.Blog.Service.Categories;
 using Snow.Blog.SqlServer;
+using Snow.Blog.Web.Blazor.Data;
 
-namespace Snow.Blog.Web
+namespace Snow.Blog.Web.Blazor
 {
     public class Startup
     {
@@ -28,13 +30,15 @@ namespace Snow.Blog.Web
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddRazorPages();
+            services.AddServerSideBlazor();
 
             var application = AssemblyLoadContext.Default.LoadFromAssemblyName(new AssemblyName("Snow.Blog.Service"));
-            var web = AssemblyLoadContext.Default.LoadFromAssemblyName(new AssemblyName("Snow.Blog.Web"));
-            services.AddAutoMapper(application, web);
+            //var web = AssemblyLoadContext.Default.LoadFromAssemblyName(new AssemblyName("Snow.Blog.Web"));
+            services.AddAutoMapper(application);
             services.AddTransient<IBloggerService, BloggerService>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IBloggerRepository, BloggerRepository>();
@@ -50,23 +54,17 @@ namespace Snow.Blog.Web
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Error");
             }
+
             app.UseStaticFiles();
 
             app.UseRouting();
 
-            app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapAreaControllerRoute(
-                    name: "MyArea",
-                    areaName: "Manager",
-                    pattern: "Manager/{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapBlazorHub();
+                endpoints.MapFallbackToPage("/_Host");
             });
         }
     }

@@ -26,10 +26,7 @@
         </div>
         <div class="col-8">
             <!--正文列表内容-->
-            <div id="content">
-                @await Component.InvokeAsync("BloggerList", new { categoryId = Model.Page })
-            </div>
-            @*<div id="body"></div>*@
+            <div id="content"></div>
             <!--分页-->
             <div id="pagination"></div>
             <a id="replaceHref" style="display: none;" asp-controller="Blogger" asp-action="List" asp-route-page="2"
@@ -49,16 +46,18 @@
 @section Script{
     <script src="~/js/clock.js"></script>
     <script src="~/js/Calendar.js"></script>
-    <script src="~/lib/jquery.unobtrusive-ajax/jquery.unobtrusive-ajax.min.js"></script>
-    <script src="~/lib/jquery.twbsPagination/jquery.twbsPagination.js"></script>
+    <script src="~/lib/jquery.unobtrusive-ajax/jquery.unobtrusive-ajax.min.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery.twbsPagination/jquery.twbsPagination.js" asp-append-version="true"></script>
     <script type="text/javascript">
         $(function () {
+            var totalPages = @Html.Raw(Model.PageCount);
+            var limit = @Html.Raw(Model.Limit);
             var page = getStartPage();
             window.pagObj = $('#pagination').twbsPagination({
                 hideOnlyOnePage: true,  //当总数为一页时，不显示分页
                 startPage: page,
-                totalPages: 35,
-                visiblePages: 10,
+                totalPages: totalPages,
+                visiblePages: limit,
                 first: '首页',
                 last: '末页',
                 prev: '上一页',
@@ -73,6 +72,7 @@
                 console.info(page + ' (from event listening)');
             });
         });
+        // 获取开始页
         function getStartPage() {
             var page = 1;
             var hash = window.location.hash;
@@ -80,6 +80,11 @@
                 page = parseInt(hash.substr(hash.indexOf('-') + 1));
             }
             return page;
+        }
+        function loadData(categoryId, page) {
+            $.getJSON("/Blogger/GetPaged", new {categoryId:1,page:page}, function () {
+
+            });
         }
     </script>
 }

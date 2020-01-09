@@ -15,4 +15,5 @@
     <ProjectReference Include="..\Snow.Blog.Service\Snow.Blog.Service.csproj" />
     <ProjectReference Include="..\Snow.Blog.SqlServer\Snow.Blog.SqlServer.csproj" />
   </ItemGroup>
+
 </Project>

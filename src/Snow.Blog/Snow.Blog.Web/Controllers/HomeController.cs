@@ -5,8 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Snow.Blog.BLL.Blogger;
-using Snow.Blog.BLL.Category;
+using Snow.Blog.Service.Bloggers;
+using Snow.Blog.Service.Categories;
 using Snow.Blog.Web.Models;
 using Snow.Blog.Web.Models.Home;
 
@@ -15,12 +15,12 @@ namespace Snow.Blog.Web.Controllers
     public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ICategoryBll _categoryBll;
-        private readonly IBloggerBll _bloggerBll;
+        private readonly ICategoryService _categoryBll;
+        private readonly IBloggerService _bloggerBll;
 
         public HomeController(ILogger<HomeController> logger
-            , ICategoryBll categoryBll
-            , IBloggerBll bloggerBll)
+            , ICategoryService categoryBll
+            , IBloggerService bloggerBll)
         {
             _logger = logger;
             this._categoryBll = categoryBll;
@@ -30,9 +30,11 @@ namespace Snow.Blog.Web.Controllers
         public async Task<IActionResult> Index(int categoryId = -1, int page = 1)
         {
             IndexModel model = new IndexModel();
-            var categories = await _categoryBll.GetSelectList();
+            var categories = await _categoryBll.GetNavSelectList();
+            int count = await _bloggerBll.GetCountAsync();
             model.Categories = categories;
             model.Page = page;
+            model.TotalCount = count;
             //ViewData["data"] = JsonConvert.SerializeObject(List());
             return View(model);
         }

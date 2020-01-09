@@ -1,0 +1,16 @@
+﻿@inject Snow.Blog.Service.Categories.ICategoryService CategoryService
+
+<div class="sidebar">
+    <div class="sidebar-title">随笔分类</div>
+    @foreach (var item in categories)
+    {
+        <div class="sidebar-item" data-val="@item.Key" title="@item.Value"><a href="?categoryId=@item.Key">@item.Value</a></div>
+    }
+</div>
+@code {
+    private Dictionary<int, string> categories = new Dictionary<int, string>();
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await CategoryService.GetNavSelectList();
+    }
+}
