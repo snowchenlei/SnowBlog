@@ -10,27 +10,27 @@ namespace Snow.Blog.Service.Dto
         /// <summary>
         /// 页索引
         /// </summary>
-        public int PageIndex { get; set; }
+        public int Page { get; set; }
 
         /// <summary>
         /// 每页记录数
         /// </summary>
-        public int PageSize { get; set; }
+        public int Limit { get; set; }
 
         /// <summary>
         /// 总页数
         /// </summary>
-        public int PageCount => TotalCount / PageSize + (TotalCount % PageSize > 0 ? 1 : 0);
+        public int PageCount => TotalCount / Limit + (TotalCount % Limit > 0 ? 1 : 0);
 
         /// <summary>
         /// 是否有前页
         /// </summary>
-        public bool HasPrevious => PageIndex > 0 && PageCount > 0;
+        public bool HasPrevious => Page > 0 && PageCount > 0;
 
         /// <summary>
         /// 是否有后页
         /// </summary>
-        public bool HasNext => PageIndex < PageCount - 1;
+        public bool HasNext => Page < PageCount - 1;
 
         public PagedResultDto()
         {
@@ -40,15 +40,15 @@ namespace Snow.Blog.Service.Dto
         /// Creates a new <see cref="PagedResultDto{T}"/> object.
         /// </summary>
         /// <param name="totalCount">Total count of Items</param>
-        /// <param name="pageSize"></param>
-        /// <param name="pageIndex"></param>
+        /// <param name="limit"></param>
+        /// <param name="page"></param>
         /// <param name="items">List of items in current page</param>
-        public PagedResultDto(int pageIndex, int pageSize, int totalCount, IReadOnlyList<T> items)
+        public PagedResultDto(int page, int limit, int totalCount, IReadOnlyList<T> items)
             : base(items)
         {
             TotalCount = totalCount;
-            PageIndex = pageIndex;
-            PageSize = pageSize;
+            Page = page;
+            Limit = limit;
         }
     }
 }

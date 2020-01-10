@@ -1,4 +1,5 @@
-﻿@using Snow.Blog.Service.Dto;
+﻿@*@page "/bloggers/{page:int}"*@
+@using Snow.Blog.Service.Dto;
 @using Snow.Blog.Service.Bloggers.Dto;
 @inject Snow.Blog.Service.Bloggers.IBloggerService BloggerService
 <div class="list-group">
@@ -8,34 +9,87 @@
         {
             <div class="list-group-item">
                 <div class="d-flex w-100 justify-content-between">
-                    <a href="/blogger/@item.Id" target="_blank"><h3 class="mb-1">@item.Title</h3></a>
-                    <small><i class="glyphicon glyphicon-calendar"></i>@item.CreateDate.ToLocalTime()</small>
+                    <a href="/blogger/@item.Id" target="_blank">
+                        <h3 class="mb-4" title="@item.Title">@item.Title</h3>
+                    </a>
+                    <small><i class="glyphicon glyphicon-calendar"></i>@item.LastModifyDate</small>
                 </div>
                 <p class="mb-1">@item.Description</p>
-                <small>Donec id elit non mi porta.</small>
+                <small>@item.CategoryName</small>
             </div>
         }
+        <Pager Page="Page"
+               PageCount="pageCount"
+               HrefUrl="@pageUrl" />
     }
 </div>
 @code {
-    private PagedResultDto<BloggerListDto> bloggers;
+    private PagedResultDto<BloggerListDto>
+    bloggers;
 
     [Parameter]
     public int Page { get; set; } = 1;
-    private int Limit { get; set; } = 10;
+    [Parameter]
+    public int? CategoryId { get; set; }
+
+    private int limit = 2;
+    private int pageCount;
+    private string pageUrl;
 
     protected override async Task OnInitializedAsync()
     {
-        bloggers = await GetBloggers(Page);
+        await ResetParemeterAsync();
+    }
+    /// <summary>
+    /// 父元素设置参数后的回调
+    ///</summary>
+    /// <returns></returns>
+    protected override async Task OnParametersSetAsync()
+    {
+        await ResetParemeterAsync();
     }
 
-    async Task<PagedResultDto<BloggerListDto>> GetBloggers(int page)
+    /// <summary>
+    /// 重置参数
+    /// </summary>
+    /// <returns></returns>
+    private async Task ResetParemeterAsync()
+    {
+        pageUrl = CreatePageUrl();
+        bloggers = await GetBloggersAsync(Page);
+        pageCount = bloggers.PageCount;
+    }
+
+    /// <summary>
+    /// 创建分页Url
+    /// </summary>
+    /// <returns></returns>
+    private string CreatePageUrl()
+    {
+        string url = String.Empty;
+        if (CategoryId.HasValue)
+        {
+            url = $"/{CategoryId.Value}/#Page";
+        }
+        else
+        {
+            url = $"/#Page";
+        }
+        return url;
+    }
+
+    /// <summary>
+    ///获取博客列表
+    /// </summary>
+    /// <param name="page">页码</param>
+    /// <returns></returns>
+    private async Task<PagedResultDto<BloggerListDto>> GetBloggersAsync(int page)
     {
         return await BloggerService.GetBloggersPagedAsync(new GetBloggerInput()
         {
             Page = page,
-            Limit = Limit
+            CategoryId = CategoryId,
+            Limit = limit
         });
     }
-
 }

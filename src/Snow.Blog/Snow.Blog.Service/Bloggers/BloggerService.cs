@@ -28,6 +28,13 @@ namespace Snow.Blog.Service.Bloggers
         {
             string[] asc = null, desc = null;
             Dictionary<string, object> wheres = new Dictionary<string, object>();
+            if (input.CategoryId.HasValue)
+            {
+                wheres.Add("[CategoryId]=@CategoryId", new
+                {
+                    CategoryId = input.CategoryId.Value
+                });
+            }
             switch (input.Order)
             {
                 case Model.Enum.OrderType.ASC:
@@ -39,11 +46,7 @@ namespace Snow.Blog.Service.Bloggers
                     break;
             }
             var result = await _bloggerRepository.GetPageLoadAsync(wheres, input.Page, input.Limit, asc, desc);
-            return new PagedResultDto<BloggerListDto>
-            {
-                TotalCount = result.Item2,
-                Items = _mapper.Map<List<BloggerListDto>>(result.Item1)
-            };
+            return new PagedResultDto<BloggerListDto>(input.Page, input.Limit, result.totalCount, _mapper.Map<List<BloggerListDto>>(result.items));
         }
 
         /// <summary>

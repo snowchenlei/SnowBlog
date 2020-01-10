@@ -1,0 +1,139 @@
+﻿@using Snow.Blog.Model.Enum;
+@if (!HideOnlyOnePage || PageCount > 1)
+{
+    <nav aria-label="Page navigation example" class="mt-4">
+        <ul class="pagination justify-content-center">
+            @if (Page > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@CreateHref(1)">
+                        @((MarkupString)First)
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="@CreateHref(Page - 1)">
+                        @((MarkupString)Prev)
+                    </a>
+                </li>
+            }
+
+            @{
+                int startPage = 1, endPage = PageCount;
+                @if (PageCount > _maxShowPageCount)
+                {
+                    int harfCount = _maxShowPageCount / 2;
+                    int stepCount = _maxShowPageCount - 1;
+                    if (Page > harfCount + 1)
+                    {
+                        startPage = Page - 2;
+                        if (startPage + stepCount < PageCount)
+                        {
+                            endPage = startPage + stepCount;
+                        }
+                        else
+                        {
+                            startPage = PageCount - stepCount;
+                            endPage = PageCount;
+                        }
+                    }
+                    else
+                    {
+                        endPage = startPage + stepCount;
+                    }
+                }
+                @for (int i = startPage; i <= endPage; i++)
+                {
+                    string className = "";
+                    if (Page == i)
+                    {
+                        className = "active";
+                    }
+                    <li class="page-item @className"><a class="page-link" href="@CreateHref(i)">@i</a></li>
+                }
+            }
+            @if (Page < PageCount)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@CreateHref(Page+1)">
+                        @((MarkupString)Next)
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="@CreateHref(PageCount)">
+                        @((MarkupString)Last)
+                    </a>
+                </li>
+            }
+        </ul>
+        @*<span>当前共 @TotalCount 条记录，显示第1至10条记录，每页显示10条记录</span>*@
+    </nav>
+}
+
+@code {
+    [Parameter]
+    public int Page { get; set; }
+    private int _maxShowPageCount;
+    [Parameter]
+    public int MaxShowPageCount
+    {
+        get
+        {
+            return _maxShowPageCount;
+        }
+        set
+        {
+            if (value < 3)
+            {
+                _maxShowPageCount = 3;
+            }
+            else
+            {
+                _maxShowPageCount = value;
+            }
+        }
+    }
+    [Parameter]
+    public int TotalCount { get; set; }
+    [Parameter]
+    public int PageCount { get; set; }
+    [Parameter]
+    public bool HideOnlyOnePage { get; set; }
+    [Parameter]
+    public string First { get; set; }
+    [Parameter]
+    public string Last { get; set; }
+    [Parameter]
+    public string Prev { get; set; }
+    [Parameter]
+    public string Next { get; set; }
+    [Parameter]
+    public string HrefUrl { get; set; }
+    [Parameter]
+    public string PageVariable { get; set; }
+    [Parameter]
+    public Alignment Alignment { get; set; }
+
+    public Pager()
+    {
+        HideOnlyOnePage = true;
+        MaxShowPageCount = 5;
+        HrefUrl = "/#Page";
+        PageVariable = "#Page";
+        First = "First";
+        Last = "Last";
+        Prev = "Previous";
+        Next = "Next";
+    }
+    private string CreateHref(int index)
+    {
+        if (index < 1)
+        {
+            index = 1;
+        }
+        if (index > PageCount)
+        {
+            index = PageCount;
+        }
+        return HrefUrl.Replace(PageVariable, index.ToString());
+    }
+}

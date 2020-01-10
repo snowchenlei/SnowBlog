@@ -4,7 +4,7 @@
     <div class="sidebar-title">随笔分类</div>
     @foreach (var item in categories)
     {
-        <div class="sidebar-item" data-val="@item.Key" title="@item.Value"><a href="?categoryId=@item.Key">@item.Value</a></div>
+        <div class="sidebar-item" data-val="@item.Key" title="@item.Value"><a href="/@item.Key/1">@item.Value</a></div>
     }
 </div>
 @code {

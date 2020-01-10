@@ -21,9 +21,11 @@ namespace Snow.Blog.Service.Bloggers.Dto
         /// </summary>
         public string Description { get; set; }
 
+        public string CategoryName { get; set; }
+
         /// <summary>
-        /// 创建时间
+        /// 最后修改时间
         /// </summary>
-        public DateTime CreateDate { get; set; }
+        public string LastModifyDate { get; set; }
     }
 }

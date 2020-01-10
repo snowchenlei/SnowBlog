@@ -1,4 +1,6 @@
 ﻿@page "/"
+@page "/{page:int}"
+@page "/{categoryId:int}/{page:int}"
 
 <div class="container">
     <div class="row">
@@ -10,13 +12,11 @@
         <div class="col-8">
             <!--正文列表内容-->
             <div id="content">
-                <Bloggers />
+                <Bloggers Page="Page.Value"
+                          CategoryId="CategoryId" />
             </div>
             <!--分页-->
             <div id="pagination"></div>
-            <a id="replaceHref" style="display: none;" asp-controller="Blogger" asp-action="List" asp-route-page="2"
-               data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace"
-               data-ajax-update="#content" class="mypager page-link">1</a>
         </div>
         <div class="col">
             <!--其它内容-->
@@ -25,3 +25,14 @@
         </div>
     </div>
 </div>
+@code{
+    [Parameter]
+    public int? Page { get; set; }
+    [Parameter]
+    public int? CategoryId { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Page = Page.HasValue ? Page : 1;
+    }
+}

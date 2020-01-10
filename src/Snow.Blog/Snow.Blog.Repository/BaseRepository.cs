@@ -535,7 +535,7 @@ namespace Snow.Blog.Repository
         /// <param name="asc">正序列</param>
         /// <param name="desc">反序列</param>
         /// <returns>《当页数据, 总记录数》</returns>
-        public virtual async Task<Tuple<IEnumerable<TEntity>, int>> GetPageLoadAsync(Dictionary<string, object> wheres
+        public virtual async Task<(IEnumerable<TEntity> items, int totalCount)> GetPageLoadAsync(Dictionary<string, object> wheres
              , int pageIndex, int pageSize, string[] asc = null, string[] desc = null)
         {
             InitialPageSql(out string countQuery, out string selectQuery);
@@ -573,7 +573,7 @@ namespace Snow.Blog.Repository
             {
                 var totalCount = await connection.QuerySingleAsync<int>(count.RawSql, count.Parameters);
                 var rows = await QueryAsync(selector.RawSql, selector.Parameters, connection);
-                return new Tuple<IEnumerable<TEntity>, int>(rows, totalCount);
+                return new ValueTuple<IEnumerable<TEntity>, int>(rows, totalCount);
             }
         }
 

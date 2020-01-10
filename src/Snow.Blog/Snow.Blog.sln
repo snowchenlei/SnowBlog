@@ -15,9 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snow.Blog.Service", "Snow.B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Repository", "Repository", "{C7212689-5613-4D53-B10E-2A61B18B5485}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snow.Blog.SqlServer", "Snow.Blog.SqlServer\Snow.Blog.SqlServer.csproj", "{E2D3F35E-6C70-4C33-BA6A-E7A743A5FFA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snow.Blog.SqlServer", "Snow.Blog.SqlServer\Snow.Blog.SqlServer.csproj", "{E2D3F35E-6C70-4C33-BA6A-E7A743A5FFA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snow.Blog.Web.Blazor", "Snow.Blog.Web.Blazor\Snow.Blog.Web.Blazor.csproj", "{48CC84EB-3BC9-4E4B-B9C6-DFABBE04151B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snow.Blog.Web.Blazor", "Snow.Blog.Web.Blazor\Snow.Blog.Web.Blazor.csproj", "{48CC84EB-3BC9-4E4B-B9C6-DFABBE04151B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

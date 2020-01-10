@@ -11,7 +11,11 @@ namespace Snow.Blog.Service.Bloggers.Mappers
     {
         public BloggerMapperProfile()
         {
-            CreateMap<Blogger, BloggerListDto>();
+            CreateMap<Blogger, BloggerListDto>()
+                .ForMember(entity => entity.CategoryName,
+                    opt => opt.MapFrom(src => (src.Category.Name)))
+                .ForMember(entity => entity.LastModifyDate,
+                    opt => opt.MapFrom(src => (src.EditDate.ToString("yyyy-MM-dd HH:mm:ss"))));
             CreateMap<Blogger, BloggerDetailDto>()
                 .ForMember(entity => entity.CategoryName,
                     opt => opt.MapFrom(src => (src.Category.Name)));

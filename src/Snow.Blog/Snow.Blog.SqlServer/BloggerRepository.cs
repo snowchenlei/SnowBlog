@@ -38,5 +38,37 @@ namespace Snow.Blog.SqlServer
                 return result.FirstOrDefault();
             }
         }
+
+        protected override void InitialPageSql(out string countQuery, out string selectQuery)
+        {
+            countQuery = $@"SELECT COUNT(1)
+                      FROM [{TableName}]
+                      /**where**/";
+
+            selectQuery = $@"SELECT *
+              FROM  (SELECT ROW_NUMBER() OVER ( /**orderby**/ ) AS RowNum, b.*, c.Name
+                   FROM   [{TableName}] AS b
+                    LEFT JOIN Category AS c ON b.CategoryId=c.ID
+                   /**where**/
+                  ) AS RowConstrainedResult
+              WHERE  RowNum >= ((@PageIndex-1) * @PageSize + 1 )
+                AND RowNum <= (@PageIndex) * @PageSize
+              ORDER BY RowNum";
+        }
+
+        protected override Task<IEnumerable<Blogger>> QueryAsync(string sql, object parameters = null, IDbConnection connection = null)
+        {
+            if (connection == null)
+            {
+                using (connection = DBSessionFactory.CreateDbConnection(ConnectionString))
+                {
+                    return connection.QueryAsync<Blogger, Category, Blogger>(sql, (b, c) => { b.Category = c; return b; }, parameters, splitOn: "Name");
+                }
+            }
+            else
+            {
+                return connection.QueryAsync<Blogger, Category, Blogger>(sql, (b, c) => { b.Category = c; return b; }, parameters, splitOn: "Name");
+            }
+        }
     }
 }

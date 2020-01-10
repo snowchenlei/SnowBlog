@@ -9,9 +9,9 @@ namespace Snow.Blog.Service.Bloggers.Dto
     {
         public GetBloggerInput()
         {
-            Sorting = "ID";
+            Sorting = "b.ID";
         }
 
-        public int CategoryId { get; set; }
+        public int? CategoryId { get; set; }
     }
 }
